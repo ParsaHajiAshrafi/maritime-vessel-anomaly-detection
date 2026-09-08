@@ -12,7 +12,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parent
 DATA_CANDIDATES = [
     ROOT / "maritime_vessel_anomaly_synthetic.csv",
     ROOT / "data" / "maritime_vessel_anomaly_synthetic.csv",
@@ -57,7 +57,6 @@ def main() -> None:
     )
     model.fit(X_train, y_train)
     probabilities = model.predict_proba(X_test)[:, 1]
-    # Anomaly screening prioritizes recall over the default 0.50 cutoff.
     decision_threshold = 0.30
     predictions = (probabilities >= decision_threshold).astype(int)
 
