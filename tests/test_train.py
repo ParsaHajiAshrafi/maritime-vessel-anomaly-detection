@@ -10,10 +10,10 @@ DATA_PATH = ROOT / "maritime_vessel_anomaly_synthetic.csv"
 def test_dataset_schema_and_size():
     frame = pd.read_csv(DATA_PATH)
     expected = {
-        "vessel_id", "vessel_type", "season", "speed_knots",
-        "course_change_deg", "route_distance_nm", "draught_m",
-        "wind_knots", "visibility_km", "traffic_density",
-        "ais_gap_minutes", "anomaly",
+        "vessel_id", "vessel_type", "month", "speed_knots",
+        "course_change_deg", "distance_to_route_nm", "draught_m",
+        "wind_speed_knots", "visibility_nm", "traffic_density",
+        "signal_gap_minutes", "anomaly",
     }
     assert expected.issubset(frame.columns)
     assert len(frame) == 6000
