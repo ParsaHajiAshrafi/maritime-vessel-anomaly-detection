@@ -17,8 +17,10 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r requirements.txt pytest
       - name: Compile source
         run: python -m py_compile train.py
+      - name: Run data validation tests
+        run: pytest -q
       - name: Run training pipeline
         run: python train.py
