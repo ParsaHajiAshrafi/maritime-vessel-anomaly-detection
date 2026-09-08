@@ -4,14 +4,20 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score
+from sklearn.metrics import (ConfusionMatrixDisplay, PrecisionRecallDisplay,
+                             RocCurveDisplay, classification_report,
+                             confusion_matrix, roc_auc_score)
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA_PATH = ROOT / "maritime_vessel_anomaly_synthetic.csv"
+DATA_CANDIDATES = [
+    ROOT / "maritime_vessel_anomaly_synthetic.csv",
+    ROOT / "data" / "maritime_vessel_anomaly_synthetic.csv",
+]
+DATA_PATH = next((path for path in DATA_CANDIDATES if path.exists()), DATA_CANDIDATES[0])
 OUTPUT_DIR = ROOT / "outputs"
 RANDOM_STATE = 42
 
@@ -71,7 +77,20 @@ def main() -> None:
     plt.xlabel("Importance")
     plt.tight_layout()
     plt.savefig(OUTPUT_DIR / "feature_importance.png", dpi=150)
+    plt.close()
+
+    figure, axes = plt.subplots(1, 3, figsize=(15, 4))
+    RocCurveDisplay.from_predictions(y_test, probabilities, ax=axes[0])
+    PrecisionRecallDisplay.from_predictions(y_test, probabilities, ax=axes[1])
+    ConfusionMatrixDisplay.from_predictions(y_test, predictions, ax=axes[2], colorbar=False)
+    axes[0].set_title("ROC curve")
+    axes[1].set_title("Precision-recall curve")
+    axes[2].set_title(f"Confusion matrix (threshold={decision_threshold:.2f})")
+    figure.tight_layout()
+    figure.savefig(OUTPUT_DIR / "evaluation_curves.png", dpi=150)
+    plt.close(figure)
     print(f"saved={OUTPUT_DIR / 'feature_importance.png'}")
+    print(f"saved={OUTPUT_DIR / 'evaluation_curves.png'}")
 
 
 if __name__ == "__main__":
