@@ -41,6 +41,10 @@ The reproducible baseline uses an 80/20 stratified split and a screening thresho
 
 Overall ROC-AUC is `0.590` on the held-out split. The result is intentionally treated as a starting point: the rare anomaly class and weak signal separation make threshold selection, calibration, temporal splits, and stronger features important next steps. The script also exports `outputs/evaluation_curves.png` for visual inspection.
 
+![Evaluation curves](evaluation_curves.png)
+
+![Feature importance](feature_importance.png)
+
 ## Workflow
 
 1. Load and validate the tabular data.
